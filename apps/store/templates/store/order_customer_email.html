@@ -1,0 +1,12 @@
+<p>Hi!</p>
+<p>We've recieve your payment for:</p>
+	<ul>
+		{% for item_description in item_descriptions %}
+			<li>{{item_description}}</li>
+		{% endfor %}
+		<li><b>Total:{{order.get_total}}</b></li>
+	</ul>
+
+<p>This is the reference code for your order: <b>{{ref_code}}</b></p>
+<p>We'll contact you soon via email to schedule an appointment!</p>
+<p>- The Readapt Nutrition Team</p>

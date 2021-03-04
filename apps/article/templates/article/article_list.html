@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% load article_template_tags %}
+{% load static%}
+
+<head>
+	{% block title %}Article List{% endblock %}
+</head>
+
+<body>
+	{% block article %}active{% endblock %}
+
+	{% block body %}
+		<h3 align="center">{{category.name}}</h3>
+		<hr>
+
+		<form method="GET" action="{% url 'article:search_results' %}" class="float-right">
+			<input name="search_input" class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+		</form><br><br>
+
+		<div class="row col pos-rel mt-2 t-20">
+			{% for article in article_list %}
+			  <div class="col-lg-4 col-md-6 mb-4">
+			    <div class="card">
+
+			      <div class="view overlay">
+			        <a href="{% url 'article:article_detail' category=article.category.slug article=article.slug %}">
+			        	<img class="card-img-top" src="{{article.image.url}}" alt="{{article.title}}" >
+			        </a>
+			      </div>
+
+			      <div class="card-list-body">
+			        <a href="{% url 'article:article_detail' category=article.category.slug article=article.slug %}" class="dark-grey-text lead font-weight-bold text-26">{{article.title}}</a>
+			      </div>
+
+			    </div>
+			  </div>
+			{% endfor %}
+		</div>
+		<hr>
+		<center><a align="center" href="{% url 'article:category_list' %}">Go back to Category List home page</a></center>
+
+	{% endblock body %}
+
+
+</body>

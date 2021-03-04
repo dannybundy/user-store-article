@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+
+<head>
+	{% block title %}Billing Profile{% endblock %}
+</head>
+
+<body>				
+	{% block profile %}active{% endblock %}
+
+	{% block body %}
+		<div class="center border-l-grey border-round mw-300">
+			<h3>{{ request.user.username }}</h3>
+			<img class="img-fluid mb-2" src="{% static 'store/html_images/opus_billing.jpg' %}">
+			
+			<!-- JS Disabled -->
+			<noscript>
+				<p>Cards <small>(JavaScript required)</small></p>
+				<p>Shipping Address <small>(JavaScript required)</small></p>
+				<a href="{% url 'store:order_history' %}">Order History</a>
+			</noscript>
+			
+			<div class="script-element">
+				<a href="{% url 'store:card' %}">Cards</a><br>
+				<a href="{% url 'store:shipping_address' %}">Shipping Address</a><br>
+				<a href="{% url 'store:order_history' %}">Order History</a>
+			</div>
+
+		</div>
+	{% endblock body %}
+
+	{% block javascript %}
+		<script src="{% static 'user_profile/js/reusable_code/verify_password.js' %}"></script>
+	{% endblock javascript %}
+</body>
+
+

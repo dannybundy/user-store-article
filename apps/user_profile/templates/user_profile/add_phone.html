@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+<head>
+	{% block title %}Add Phone Number{% endblock %}
+</head>
+
+<body>
+	{% block body %}
+		<div class="center border-l-grey border-round w-290">
+			<form method="POST" class="single-submit">
+				{% csrf_token %}
+				<h3 class="mb-3" align="center">Add Phone Number</h3>
+				<div class="form-group">{{form.country_code}}{{form.area_code}}{{form.number}}</div>
+				{% if form.phonenumber.errors %}
+				    {% for err in form.phonenumber.errors %}
+				      <p class= "text-error error_message mt-3">{{ err }}</p>
+				    {% endfor %}
+				{% endif %}
+				
+				<a class="cursor"><small>Why do you need my phone number?</small></a>
+				<p class="text-14 mt-2 info">We will use your phone number as a means of reseting your password or recovering your username if you have issues with using your email.</p>
+				<button type="submit" class="btn btn-primary w-250 mt-2">Add Phone Number</button>
+				<span class="mt-3"><center>or</center></span>
+				<hr>
+			</form>
+
+			<form method="POST">
+				{% csrf_token %}
+				<button type="submit" name="later" value="true" class="btn bt-color2 w-250">Add Phone Number Later</button>
+			</form>
+
+		</div>
+	{% endblock body %}
+
+	{% block javascript %}
+		<script type="text/javascript">
+			$(".info").hide()
+
+			$(".cursor").on('click', function(){
+				$(".info").show()
+			});
+		</script>
+	{% endblock javascript %}
+</body>

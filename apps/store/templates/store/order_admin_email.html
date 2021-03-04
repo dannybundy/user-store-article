@@ -1,0 +1,12 @@
+<p>Maxwell,</p>
+<p>{{order.name}} ({{order.email}}), ordered some things. Here they are:</p>
+	<ul>
+		{% for item_description in item_descriptions %}
+			<li>{{item_description}}</li>
+		{% endfor %}
+		<li><b>Total:{{order.get_total}}</b></li>
+	</ul>
+
+<p>This is the reference code for his order: <b>{{ref_code}}</b></p>
+<p>Email him to schedule an appointment.</p>
+<p>- Piano</p>

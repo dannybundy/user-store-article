@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+
+<head>
+	{% block title %}Store Search Results{% endblock %}
+</head>
+
+<body>
+	{% block store %}active{% endblock %}
+
+	{% block body %}
+
+		<h3 align="center">Store Search Results<span id="search-label"></span></h3>
+		<hr>
+		<span id="search-parameter" hidden>{{query}}</span>
+
+		<form method="GET" action="{% url 'store:search_results' %}" class="single-submit float-right">
+			<input name="search_input" class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+		</form><br><br>
+
+		<div class="row pos-rel mt-2 t-20">
+			{% for item in item_list %}
+			  <div class="col-lg-3 col-md-6 mb-4">
+			    <div class="card">
+
+			      <div class="view overlay">
+			        <a href="{% url 'store:item_detail' item_category=item.item_category.slug item=item.slug %}">
+			        	<img class="card-img-top" src="{{item.image.url}}" alt="{{item.name}}" >
+			        </a>
+			      </div>
+
+			      <div class="card-list-body">
+			        <a href="{% url 'store:item_detail' item_category=item.item_category.slug item=item.slug  %}" class="dark-grey-text lead font-weight-bold text-26">{{item.name}}</a>
+			        <span class="font-weight-bold blue-text text-20"> - ${{item.price}}</span>
+			      </div>
+
+			    </div>
+			  </div>
+			{% endfor %}
+		</div>
+
+		<hr class="mt-5">
+		<div class="pagination justify-content-center mt-5">
+		    <span class="step-links">
+		        {% if page_obj.has_previous %}
+		            <a href="?page=1">&laquo;&laquo;</a>
+		            <a href="?page={{ page_obj.previous_page_number }}">&laquo;</a>
+		        {% endif %}
+
+		        <span class="current">
+		            {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+		        </span>
+
+		        {% if page_obj.has_next %}
+		            <a href="?page={{ page_obj.next_page_number }}">&raquo;</a>
+		            <a href="?page={{ page_obj.paginator.num_pages }}">&raquo;&raquo;</a>
+		        {% endif %}
+		    </span>
+		</div>
+
+	{% endblock body %}
+</body>

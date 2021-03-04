@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% load static%}
+
+<head>
+	{% block title %}Store List{% endblock %}
+</head>
+
+<body>
+	{% block store %}active{% endblock %}
+	
+	{% block body %}
+		<h3 align="center">Store List</h3>
+		<hr>
+
+		<div class="center mw-1000">
+			<div class="row pos-rel mt-2 t-20">
+				{% for item_category in object_list %}
+				  <div class="col-lg-4 col-md-6 mb-4 mt-3">
+				    <div class="card">
+
+				      <div class="view overlay">
+				        <a href="{% url 'store:item_list' item_category.slug %}">
+				        	<img class="card-img-top" src="" alt="{{item_category.name}}" >
+				        </a>
+				      </div>
+
+				      <div class="card-list-body">
+				        <center><a href="{% url 'store:item_list' item_category.slug %}" class="dark-grey-text lead font-weight-bold text-26">{{item_category.name}}</a></center>
+				      </div>
+
+				    </div>
+				  </div>
+				{% endfor %}
+			</div>
+		</div>
+
+	{% endblock body %}
+
+	{% block javascript %}
+		<script src="{% static 'store/js/store.js' %}"></script>
+	{% endblock javascript %}
+
+</body>

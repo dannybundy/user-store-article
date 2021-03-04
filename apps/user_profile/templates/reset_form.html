@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+<head>{% block title %}Retrieve Username{% endblock title%}</head>
+
+<body>
+	{% block body %}
+		<div class="row center border-l-grey border-round" id="reset-border">
+			<img src="{% static 'user_profile/html_images/snoopy_woodstock.jpg' %}" alt="woodstock" class="col-md-6 img-fit img-outside" id="reset-img">
+
+			<div class="col-md-6 center mw-290">
+				<h4 align="center">{% block h4 %} {% endblock h4 %}</h4><hr>
+
+				<form method="POST" class="single-submit">
+					{% csrf_token %}
+					<img src="{% static 'user_profile/html_images/snoopy_woodstock.jpg' %}" alt="woodstock" class="img-fluid img-inside">
+	
+					<p class="text-14 mt-3">Enter the email or phone number associated with your account and we'll send you {% block info %}{% endblock info%}.</p>
+
+
+					{% if form.non_field_errors %}
+					    {% for err in form.non_field_errors %}
+					      <p class= "text-error error_message mt-3">{{ err }}</p>
+					    {% endfor %}
+					{% endif %}
+
+					<div class="input-group mb-3">
+						<div class="input-group-prepend">
+							<span class="input-group-text" id="email-addon"><i class="fa fa-envelope"></i></span>
+						</div>
+							{{form.email}}
+					</div>
+					
+					<div class="input-group mb-3">
+						<div class="input-group-prepend">
+							<span class="input-group-text" id="phone-addon"><i class="fa fa-phone"></i></span>
+						</div>
+						{{form.country_code}}{{form.area_code}}{{form.number}}
+						{% if form.phonenumber.errors %}
+						    {% for err in form.phonenumber.errors %}
+						      <p class="text-error error_message mt-3">{{ err }}</p>
+						    {% endfor %}
+						{% endif %}
+					</div>
+
+					<button type="Submit"class="btn bt-color1 w-full">{% block button_title %} {% endblock button_title %}</button>
+
+					<hr>
+					<a href="{% url 'profile:login' %}"><center>Return to login</center></a>
+				</form>
+			</div>
+
+		</div>
+	{% endblock body %}
+</body>

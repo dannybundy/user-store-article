@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+
+{% block title%}500{% endblock title %}
+
+{% block body %}
+	<div class="center mw-600">
+		<h3>Server error. Please try again.</h3>
+		<img src="{% static 'user_profile/html_images/tintin_500.jpg' %}" alt="tintin_500" class="img-fluid">
+	</div>
+{% endblock body %}

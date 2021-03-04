@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+
+<body>
+	{% block body %}
+
+	<div align="center">
+		<h3>Welcome to my Template Website</h3>
+		<h4>Below are my applications which you can play around with</h4>
+		
+		<div class="row center mw-700">
+			<a class="col" href="{% url 'profile:profile' %}">
+				<img src="{% static 'user_profile/html_images/tintin_400.jpg' %}" alt="Profile" class="img-fluid">
+				<h5>Profile</h5>
+			</a>
+			<a class="col" href="{% url 'store:item_category_list' %}">
+				<img src="{% static 'user_profile/html_images/tintin_404.jpg' %}" alt="Store" class="img-fluid">
+				<h5>Store</h5>
+			</a>
+			<a class="col" href="{% url 'article:category_list' %}">
+				<img src="{% static 'user_profile/html_images/tintin_403.jpg' %}" alt="Article" class="img-fluid">
+				<h5>Articles</h5>
+			</a>
+		</div>
+
+	</div>
+
+
+	{% endblock %}
+</body>

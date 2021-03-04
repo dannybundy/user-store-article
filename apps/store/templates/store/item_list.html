@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+{% load static%}
+
+<head>
+	{% block title %}{{item_category.name}} Store{% endblock %}
+</head>
+
+<body>
+	{% block store %}active{% endblock %}
+
+	{% block body %}
+		<h3 align="center">{{item_category.name}} Store</h3>
+		<hr>
+
+		<form method="GET" action="{% url 'store:search_results' %}" class="float-right">
+			<input name="search_input" class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+		</form><br><br>
+
+
+		<div class="row">
+
+			<div class="col-2 mw-250 p-3">
+				<form method="GET" id="filter-form">
+
+					{% for filter_category in item_category.filtercategory_set.all %}
+						<h4>{{filter_category.name}}</h4>
+
+						{% for filter in filter_category.filteroption_set.all %}
+							<input type="checkbox" {% if filter.pk in chosen_filter_pk_list %}checked{% endif %} name="filter_option" value="{{filter.pk}}" class="item-filter mb-1"> {{filter.name}}</input>
+							<br>
+						{% endfor %}
+
+					{% endfor %}
+
+					{% if item_category.filtercategory_set.all|length > 0 %}
+						<hr>
+						<button type="button" id="clear-filter" class="btn btn-sm bt-color2">Clear all filters</button>
+						<input type="text" name="filter_applied" value="0" hidden>
+					{% endif %}
+
+				</form>
+			</div>
+
+			<div class="row col pos-rel mt-2 t-20">
+				{% for item in item_list %}
+				  <div class="col-lg-4 col-md-6 mb-4">
+				    <div class="card">
+
+				      <div class="view overlay">
+				        <a href="{% url 'store:item_detail' item_category=item_category.slug item=item.slug %}">
+				        	<img class="card-img-top" src="{{item.image.url}}" alt="{{item.name}}" >
+				        </a>
+				      </div>
+
+				      <div class="card-list-body">
+				      	{% for filter in item.filter_option.all %}
+				      		<span>{{filter.name}}</span>
+				      	{% endfor %}
+				      	<hr>
+				        <a href="{% url 'store:item_detail' item_category=item_category.slug item=item.slug %}" class="dark-grey-text lead font-weight-bold text-26">{{item.name}}</a>
+				        <span class="font-weight-bold blue-text text-20"> - ${{item.price}}</span>
+				      </div>
+
+				    </div>
+				  </div>
+				{% empty %}
+					{% if item_category.filtercategory_set|length > 0 %}
+						<h4>There is no query matching your filter</h4>
+					{% endif %}
+				{% endfor %}
+			</div>
+
+		</div>
+
+		<hr class="mt-5">
+		<div class="pagination justify-content-center mt-5">
+		    <span class="step-links">
+		        {% if page_obj.has_previous %}
+		            <a href="?page=1">&laquo;&laquo;</a>
+		            <a href="?page={{ page_obj.previous_page_number }}">&laquo;</a>
+		        {% endif %}
+
+		        <span class="current">
+		            {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+		        </span>
+
+		        {% if page_obj.has_next %}
+		            <a href="?page={{ page_obj.next_page_number }}">&raquo;</a>
+		            <a href="?page={{ page_obj.paginator.num_pages }}">&raquo;&raquo;</a>
+		        {% endif %}
+		    </span>
+		</div>
+
+	{% endblock body %}
+
+	{% block javascript %}
+		<script src="{% static 'store/js/store.js' %}"></script>
+	{% endblock javascript %}
+
+</body>

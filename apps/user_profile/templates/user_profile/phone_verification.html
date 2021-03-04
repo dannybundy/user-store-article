@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+
+<head>
+	{% block title %}Verify Phone Number{% endblock %}
+</head>
+
+<body>
+	{% block body %}
+		<form class="single-submit center border-l-grey border-round mw-300" align="center" method="POST">
+			{% csrf_token %}
+			<h3>Verify Phone Number</h3>
+			{{form.code|as_crispy_field}}
+			<button type="submit" class="btn bt-color1 w-full" id="verify_text">Verify</button>
+			<hr>
+			<h6 class="text-14">Didn't recieve the code?</h6>
+			<center>
+				<button type="submit" name="resend_code" value="true" class="btn bt-color3 w-full">Resend Text</button>
+				<hr>
+				<a href="{% url 'profile:profile' %}">Back to profile</a>	
+			</center>
+		</form>
+	{% endblock body %}
+</body>

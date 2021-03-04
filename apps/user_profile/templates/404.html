@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+
+{% block title%}404{% endblock title %}
+
+{% block body %}
+	<div class="center mw-600">
+		<h3>The page you're looking for doesn't exist.</h3>
+		<img src="{% static 'user_profile/html_images/tintin_404.jpg' %}" alt="tintin_404" class="img-fluid">
+	</div>
+{% endblock body %}

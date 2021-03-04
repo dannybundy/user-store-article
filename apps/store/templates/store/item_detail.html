@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+
+<head>
+	{% block title %}{{item.name}}{% endblock %}
+</head>
+
+<body>
+	{% block store %}active{% endblock %}
+
+	{% block body %}
+		<div class="msg-div"></div>
+
+		<div class="mt-4" id="item-border">
+			<div class="row wow fadeIn">
+
+				<div class="col-sm-6">
+				  <img src="{{item.image.url}}" class="card-img-top">
+				</div>
+
+				<div class="col-sm-6 mt-3 mt-sm-0">
+				    
+				    <span class="lead">
+				      {% if item.discount_price %}           
+				          <del>${{item.price}}</del>                  
+				        ${{item.discount_price}}
+				      {% else %}
+				        ${{item.price}}
+				      {% endif %}
+				    </span>
+
+				    <p class="lead font-weight-bold">{{item.name}}</p>
+
+				    <p>{{item.description}}</p>
+
+			    	<form method="POST" class="single-submit">
+			    		{% csrf_token %}
+			    		<div>
+							{% if quantity %}
+								<span class="pos-rel t-10">You currently have <b>{{quantity}}</b> in your cart</span>
+								<hr>
+				    		{% endif %}
+							<div class="row mt-2">
+								<div class="ml-3 mr-2 mw-90">
+									{{form.quantity|as_crispy_field}}
+								</div>
+
+				    		{% if add %}
+								<button type="submit" name="cart_decision" value="add" class="btn bt-color1 btn-sm my-0 mh-30 pos-rel t-5">Add
+									<i class="fas fa-shopping-cart ml-1"></i>
+								</button>
+							</div>
+							<br>
+							<a class="btn bt-color3 btn-sm float-right" href="{% url 'store:item_list' item.item_category.slug %}">Continue Shopping</a>
+							{% else %}
+					    		<button type="submit" name="cart_decision" value="update" class="btn bt-color1 btn-sm my-0 mr-2 mh-30 pos-rel t-5">Update
+					    			<i class="fas fa-redo"></i></button>
+								<button type="submit" name="cart_decision" value="remove" class="btn btn-danger btn-sm my-0 mh-30 pos-rel t-5">Remove
+									<i class="fas fa-trash ml-1"></i>
+								</button>
+							</div>
+								<br>
+								<a href="{% url 'store:order_summary' %}" class="btn bt-color2 btn-sm pos-rel r-14">Order Summary</a>
+								<a class="btn bt-color3 btn-sm float-right" href="{% url 'store:item_list' item.item_category.slug %}">Continue Shopping</a>
+							{% endif %}
+
+						</div>
+			    	</form>
+
+				</div>
+			</div>		
+		</div>
+
+	{% endblock body %}
+
+	{% block javascript %}
+		<script type="text/javascript" src="{% static 'store/js/reusable_code/functions.js' %}"></script>
+	{% endblock javascript %}
+</body>

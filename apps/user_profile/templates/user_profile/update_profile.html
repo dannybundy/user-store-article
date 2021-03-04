@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load user_profile_template_tags %}
+{% load static %}
+
+
+<head>
+	{% block title %}Managing {{user.username}}'s Profile{% endblock %}
+</head>
+
+{% block profile %}active{% endblock %}
+
+<body>
+	{% block body %}
+		<form method="POST" class="single-submit center border-l-grey border-round mw-300">
+			{% csrf_token %}
+
+			<h3><center>{{user.username}}</center></h3>
+
+			<label for="id_first_name">First Name</label>
+			{{form.first_name|as_crispy_field}}
+
+			<label for="id_last_name">Last Name</label>
+			{{form.last_name|as_crispy_field}}
+
+			<label for="id_email">Email Address</label>
+			{{form.email|as_crispy_field}}
+
+
+			<hr>
+			<h5 align="center">Current Phone Number</h5>
+			<p align="center">
+				{% if user.userprofile.phonenumber %}
+					{{user.userprofile.phonenumber}}
+					{% if not user.userprofile.verified_number %}
+						(not yet verified)
+					{% endif %}
+				{% else %}
+					Not yet set up
+				{% endif %}
+			</p>
+			<hr>
+
+			{{form.country_code}}{{form.area_code}}{{form.number}}
+
+			{% if form.phonenumber.errors %}
+			    {% for err in form.phonenumber.errors %}
+			      <p class= "text-error error_message mt-3">{{ err }}</p>
+			    {% endfor %}
+			{% endif %}
+
+
+			<button type="submit" class="btn bt-color1 w-full mt-4" id="update_btn">Update</button>
+			<button type="submit" class="btn btn-danger w-full mt-2" name="disable" value="True" id="disable_btn">Disable Account</button>
+			<hr>
+			<a class="center-block" href="{% url 'profile:profile' %}"><center>Back to profile</center></a>
+		</form>
+	{% endblock body %}
+
+	{% block javascript %}
+		<script type="text/javascript">
+			$("#disable_btn").on("click", function() {
+				val = window.confirm("Are you sure you want to disable your account?");
+				return val
+			});
+		</script>
+		<script src="{% static 'user_profile/js/reusable_code/verify_password.js' %}"></script>
+	{% endblock javascript %}
+</body>
+

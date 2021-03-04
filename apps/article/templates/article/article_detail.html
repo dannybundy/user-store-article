@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load article_template_tags %}
+{% load static %}
+
+
+<head>
+	{% block title %}{{article.title}}{% endblock %}
+</head>
+
+<body>				
+	{% block article %}active{% endblock %}
+
+
+	{% block body %}
+		<div class="center p-md-5 border-l-grey mw-1000 border-round">
+			<div class="row">
+
+				<div class="col-md-8">
+					<h3>{{article.title}}</h3>
+					<img class="img-fluid mh-300" src="{{article.image.url}}" alt="article.title">
+
+					<!-- Span for image -->
+					<p class="text-14 font-weight-bold mt-1">{{article.date_pub.day}} {{article.date_pub.month|month_name}} {{article.date_pub.year}}</p>
+					
+					<h4>{{article.description}}</h4>
+				</div>
+
+			</div>
+			<hr>
+
+			<div id="article-body">{{ article.body|safe}}</div>
+			<hr>
+
+			<div class="center mw-470">
+				<b><center class="text-18 mb-1">Recent {{article.category.name}} Article</center></b>
+				<ul>
+					{% for article in article_list %}
+						<li><a class="font-weight-bold text-14" href="{% url 'article:article_detail' category=article.category.slug article=article.slug %}">{{article.title}}: {{article.description}}</a></li>
+					{% endfor %}
+				</ul>
+				<hr>
+			</div>
+
+			<center><a align="center" href="{% url 'article:article_list' article.category.slug %}">Go back to {{article.category.name}} home page</a></center>
+		</div>
+	{% endblock body %}
+</body>

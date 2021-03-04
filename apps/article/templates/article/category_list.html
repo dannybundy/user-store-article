@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load article_template_tags %}
+{% load static %}
+
+
+<head>
+	{% block title %}Article{% endblock %}
+</head>
+
+<body>
+	{% block article %}active{% endblock %}
+
+
+	{% block body %}
+		<h3 align="center">article</h3>
+		<hr>
+
+		<form method="GET" action="{% url 'article:search_results' %}" class="float-right">
+			<input name="search_input" class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+		</form><br><br>
+
+
+		<div class="center mw-1000">
+			<div class="row pos-rel mt-2 t-20">
+				{% for category in category_list %}
+
+					<div class="center col-4 mt-2">
+						<h4 align="center">
+							<a href="{% url 'article:article_list' category.slug%}">{{category.name}}</a>
+						</h4>
+
+						<div id="article-card" class="card border-round">
+							{% with category.article_set.all|first as first_article %}
+								<a href="{% url 'article:article_detail' category=category.slug article=first_article.slug %}">
+									<img class="img-fluid img-rounded" src="{{first_article.image.url}}" alt="{{first_article.title}}">
+								</a>
+							{% endwith %}
+
+							{% for article in category.article_set.all|slice:"0:4" %}
+								<div class="card-list-body font-weight-bold">
+									<a href="{% url 'article:article_detail' category=category.slug  article=article.slug %}">{{article.title}}: {{article.description}}</a>
+								</div>
+								<hr>
+							{% endfor %}
+						</div>
+
+					</div>
+				{% endfor %}
+			</div>
+		</div>
+
+	{% endblock body %}
+</body>

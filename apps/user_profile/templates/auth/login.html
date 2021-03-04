@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+
+<head>
+	{% block title %}Website Name - Log in{% endblock %}
+	{% block home %}active{% endblock %}
+</head>
+
+<body>
+	{% block body %}	
+
+		<div class="row">
+			<img src="{% static 'user_profile/html_images/calvin_hobbes.jpg' %}" alt="calvin and hobbes" class="col-md-8 img-fluid img-outside" id="login-img">
+
+			<form method="POST" class="col-md-4 mb-5 center border-l-grey border-round mw-250" id="login-form">
+				{% csrf_token %}
+
+				<h3 align="center">Website Name</h3>
+				<img class="img-fluid img-inside" src="{% static 'user_profile/html_images/calvin_hobbes.jpg' %}" alt="calvin and hobbes">
+
+				<!-- JS Disabled -->
+				{% if form.username.errors %}
+				    {% for err in form.username.errors %}
+				      <p class="text-error mt-3">{{ err }}</p>
+				    {% endfor %}
+				{% endif %}
+				
+				<!-- JS Enabled (Ajax) -->
+				<p id="error-message" class="text-error mt-3"></p>
+
+				<div class="input-group mb-3">
+					<div class="input-group-prepend">
+						<span class="input-group-text" id="username-addon"><i class="fa fa-user"></i></span>
+					</div>
+					{{form.username}}
+				</div>
+
+				<div class="input-group mb-3">
+					<div class="input-group-prepend">
+						<span class="input-group-text" id="password-addon"><i class="fa fa-lock"></i></span>
+					</div>
+					{{form.password}}
+				</div>
+
+				<div align="center">
+					<button type="submit" class="btn bt-color1 mb-3 w-full">Log In</button><br>
+					<a href="{% url 'profile:password_reset_request' %}">Forgot your password?</a><br>
+					<a href="{% url 'profile:recover_username' %}">Forgot your username?</a><br>
+					<div class="pt-2"><span>or</span></div><hr>
+					<a class="btn bt-color3 w-full" href="{% url 'profile:register' %}">Create New Account</a><br>
+				</div><br>
+
+			</form>
+		</div>
+	{% endblock body %}
+
+	{% block javascript %}
+		<script type="text/javascript" src="{% static 'user_profile/js/login.js' %}"></script>
+	{% endblock javascript %}
+</body>

@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+
+<head>
+  {% block title %}Order Summary{% endblock %}
+</head>
+
+<body>
+  {% block order_summary %}active{% endblock %}
+
+  {% block body %}
+    <div class ="msg-div"></div>
+    <div class="row container-fluid center border-l-grey border-round mw-700">
+
+      <div class="table-responsive ">
+        <h3>Order Summary</h3>
+
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Item</th>
+              <th scope="col">Price</th>
+              <th scope="col">Quantity</th>
+              <th scope="col">Total Item Price</th>
+            </tr>
+          </thead>
+
+          <tbody class="summary-tbody">
+            {% for order_item in order_item_list %}
+              <tr>
+                <th scope="row">
+                  <div class="pos-rel t-10">{{forloop.counter}}</div>
+                </th>
+
+                <form class="" method="POST">
+                  {% csrf_token %}
+                  <td>
+                    <div class="pos-rel b-5">
+                      <a class="pos-rel t-10" href="{% url 'store:item_detail' item_category=order_item.item.item_category.slug item=order_item.item.slug %}">{{order_item.item.name}}</a>
+                      <button type="submit" class="btn red pos-rel t-10 r-10" name="cart_decision" value="remove"><i class="fas fa-trash t-red float-right"></i></button>                    
+                    </div>
+                  </td>
+                  
+                  <td>
+                    <div class="pos-rel t-10">${{order_item.item.price}}</div>
+                  </td>
+
+                  <td>
+                    <div class="row">
+                      <input type="number" name="quantity" value="{{order_item.quantity}}" class="form-control mw-74" required id="id_quantity">
+
+                      <input type="text" name="item" value="{{order_item.item.pk}}" hidden>
+                      <button type="submit" name="cart_decision" value="update" class="btn"><i class="fas fa-redo"></i></button>
+                    </div>
+                      {% if form.quantity.errors %}
+                          {% for err in form.quantity.errors %}
+                            <p class= "text-error error_message mt-1 pos-rel r-10">{{ err }}</p>
+                          {% endfor %}
+                      {% endif %}
+                  </td>
+
+                  <td>
+                    <div class="pos-rel t-10">
+                      ${{order_item.get_price_total}}
+                    </div>
+                  </td>
+                </form>
+              
+              </tr>
+
+            {% empty %}
+                <tr>
+                  <td colspan="5">Your cart is empty<br><br>
+                    <a class="btn bt-color3 btn-sm float-right" href="{% url 'store:item_category_list' %}">Continue Shopping</a>
+                  </td>
+                </tr>
+            {% endfor %}
+            
+            {% if order.get_price_total %}
+              <tr>
+                <td colspan="4"><b>Order Total</b></td>
+                <td><b>${{order.get_price_total}}</b></td>
+              </tr>
+              <tr>
+                <td colspan="5">
+                  <a class="btn btn bt-color3 btn-sm float-right ml-2 mb-2" href="{% url 'store:item_category_list' %}">Continue Shopping</a>
+
+                  <noscript>Checkout <small>(JavaScript required)</small></noscript>
+                  <a class="script-element btn bt-color1 btn-sm float-right" href="{% url 'store:checkout' %}">Checkout</a>
+                </td>
+              </tr>
+            {% endif %}
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  {% endblock body %}
+
+  {% block javascript %}
+    <script type="text/javascript" src="{% static 'store/js/reusable_code/functions.js' %}"></script>
+  {% endblock javascript %}
+</body>

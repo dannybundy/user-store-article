@@ -1,0 +1,169 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+
+<head>
+	{% block title %}Your Cards{% endblock %}
+</head>
+
+<body>
+	{% block profile %}active{% endblock %}
+
+	{% block body %}
+		<noscript>
+			<meta HTTP-EQUIV="REFRESH" content="0; url={% url 'store:billing_profile' %}">
+		</noscript>
+
+		<div class="center border-l-grey border-round mw-300">
+			<h3>Your cards</h3>
+			<img class="img-fluid" src="{% static 'store/html_images/calvin_card.jpg' %}">
+        	{% csrf_token %}
+			<select name="stored_card" id="id_stored_card" class="form-control">
+			{% for x, y in stored_card_list.fields.stored_card.choices %}
+			    <option value="{{ x }}"{% if form.fields.customer.value == x %} selected{% endif %}>{{ y }}</option>
+			{% endfor %}
+			</select>
+
+			<button type="button" class="btn btn-success add-btn w-full">Add</button>
+	    	
+	    	{% for billing_form, pk, card_info in billing_form_list %}
+		        <form method="POST" id="{{pk}}" class="single-submit update-form mt-3">
+		        	{% csrf_token %}
+
+					<button type="button" class="btn btn-sm bt-color2 back-btn mt-3 mb-3">Back</button>
+					<br>
+
+		        	<h3>Update Card</h3>
+
+					<h5>{{card_info.brand}}: **** **** **** {{card_info.last4}} | exp-date: {{card_info.exp_month}}/{{card_info.exp_year}}</h5><br>
+
+					{% if billing_form.non_field_errors %}
+					  <div class="alert alert-danger">
+					    {% for err in billing_form.non_field_errors %}
+					      <p>{{ err }}</p>
+					    {% endfor %}
+					  </div>
+					{% endif %}
+
+
+					<label for="id_line1">Line 1</label>
+					{{billing_form.billing_line1|as_crispy_field}}
+
+					<label for="id_line2">Line 2 (optional)</label>
+					{{billing_form.billing_line2|as_crispy_field}}
+					<br>
+
+					<label for="id_billing_city">City</label>
+					{{billing_form.billing_city|as_crispy_field}}
+
+					<label for="id_billing_state">State</label>
+					{{billing_form.billing_state|as_crispy_field}}
+
+					<label for="id_billing_zipcode">Zip Code</label>
+					{{billing_form.billing_zipcode|as_crispy_field}}
+
+					<label for="id_billing_country">Country</label>
+					{{billing_form.billing_country|as_crispy_field}}					
+					<br>
+
+					<label for="id_billing_first_name">First Name</label>
+					{{billing_form.billing_first_name|as_crispy_field}}
+
+					<label for="id_billing_last_name">Last Name</label>
+					{{billing_form.billing_last_name|as_crispy_field}}
+
+					<label for="id_billing_email">Email Address</label>
+					{{billing_form.billing_email|as_crispy_field}}
+
+					<input type="text" name="pk" value="{{pk}}" hidden>
+
+					<button type="submit" name="update" value="true" class="btn bt-color1 w-full mb-2 update">Update Billing Address</button>
+					<button type="submit" name="delete" value="true" class="btn btn-danger w-full">Delete</button>
+        			<div class="loader mt-3 center"></div>
+
+		        </form>
+			{% endfor %}
+
+			<script src="https://js.stripe.com/v3/"></script>
+			<form method="POST" id="stripe-form" class="mt-3">
+				{% csrf_token %}
+		
+				<button type="button" class="btn bt-color2 btn-sm back-btn mt-3 mb-3">Back</button>
+				<br>
+
+				<h3>Add New Card</h3>
+
+				{% if form.non_field_errors %}
+				  <div class="alert alert-danger">
+				    {% for err in form.non_field_errors %}
+				      <p>{{ err }}</p>
+				    {% endfor %}
+				  </div>
+				{% endif %}
+
+				<div class="add-form">
+					<label for="id_billing_line1">Line 1</label>
+					{{form.billing_line1|as_crispy_field}}
+
+					<label for="id_billing_line2">Line 2 (optional)</label>
+					{{form.billing_line2|as_crispy_field}}
+					<br>
+
+					<label for="id_billing_city">City</label>
+					{{form.billing_city|as_crispy_field}}
+
+					<label for="id_billing_state">State</label>
+					{{form.billing_state|as_crispy_field}}
+
+					<label for="id_billing_zipcode">Zip Code</label>
+					{{form.billing_zipcode|as_crispy_field}}
+
+					<label for="id_billing_country">Country</label>
+					{{form.billing_country|as_crispy_field}}					
+					<br>
+
+					<label for="id_billing_first_name">First Name</label>
+					{{form.billing_first_name|as_crispy_field}}
+
+					<label for="id_billing_last_name">Last Name</label>
+					{{form.billing_last_name|as_crispy_field}}
+
+					<label for="id_billing_email">Email Address</label>
+					{{form.billing_email|as_crispy_field}}
+
+					<input type="radio" name="card_option" value="Use New Card" id="id_card_option_1" checked hidden>
+				</div>
+
+		         <!-- Payment Form -->
+		        <div id="payment_form">
+		          <h3>Payment</h3>
+		          <label for="card-element">Credit or debit card</label>
+		          <div id="card-element">
+		            <!-- A Stripe Element will be inserted here. -->
+		          </div>
+		           <! --Used to display form errors. -->
+		          <div id="card-errors" role="alert"></div>
+		        </div><br>
+
+				<button type="submit" id="stripeBtn" class="btn bt-color1 w-full">Add Card</button>
+        		<div class="loader mt-3 center"></div>
+				<input type="text" name="add" value="true" hidden>
+			</form>
+
+			<hr>
+	        <a href="{% url 'store:billing_profile' %}"><center>Back to billing profile</center></a>
+
+		</div>
+	{% endblock body %}
+	
+	{% block javascript %}
+		<script type="text/javascript" src="{% static 'store/js/reusable_code/functions.js' %}"></script>
+		<script type="text/javascript" src="{% static 'store/js/cards_and_shipping.js' %}"></script>
+		<script type="text/javascript" src="{% static 'user_profile/js/reusable_code/verify_password.js' %}"></script>
+
+		<script>var stripe = Stripe('{{PUB_KEY}}');</script>
+		<script type="text/javascript" src="{% static 'store/js/stripe.js' %}"></script>
+
+	{% endblock javascript %}
+</body>

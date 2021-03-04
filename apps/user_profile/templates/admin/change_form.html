@@ -1,0 +1,27 @@
+{% extends "admin/change_form.html" %}
+{% load i18n admin_urls static admin_modify %}
+
+{% block submit_buttons_bottom %}{% submit_row %}
+
+  {% if table %}
+    <div class="center">
+      <h3>Items</h3>
+      <h4>{{total_time}}</h4>
+      <hr>
+      <div id="ajax-table">
+        {% load django_tables2 %}
+        {% render_table table %}
+      </div>
+
+    </div>
+  {% endif %}
+
+{% endblock %}
+
+
+{% block footer %}
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script type="text/javascript" src="{% static 'user_profile/js/reusable_code/functions.js' %}"></script>
+  <script type="text/javascript" src="{% static 'store/js/admin_item_table.js' %}"></script>
+{% endblock footer%}
+

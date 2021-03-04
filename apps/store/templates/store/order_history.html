@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+
+<head>
+	{% block title %}Order History{% endblock %}
+</head>
+
+<body>
+	{% block profile %}active{% endblock %}
+	
+	{% block body %}
+		<div class="row container-fluid center border-l-grey border-round mw-1100">
+			<a class="info" href="{% url 'store:billing_profile' %}">Back to billing profile</a><br>
+
+			<div class="table-responsive text-nowrap">
+				<h3>Your Order History
+				</h3>
+
+				<img class="img-fluid" src="{% static 'images/calvin_hobbes_profile.jpg' %}" hidden>
+
+				<table class="table">
+					<thead>
+						<tr>
+							<th scope="col">#</th>
+							<th scope="col">Items</th>
+							<th scope="col">Total</th>
+							<th scope="col">Shipping Address</th>
+							<th scope="col">Date ordered</th>
+							<th scope="col">Reference Code</th>
+							<th scope="col">Delivered</th>
+							<th scope="col">Recieved</th>
+						</tr>
+					</thead>
+
+					<tbody>
+						{% for order in order_list %}
+							{% if order.ordered %}
+								<tr>
+									<td scope="row"><b>{{forloop.counter}}</b></td>
+									<td>
+										{% for order_item in order.orderitem_set.all %}
+											{% if order_item.in_cart %}
+												<p>{{order_item.quantity}} of
+													{% if order_item.item.is_active %}
+														<a href="{% url 'store:item_detail' item_category=order_item.item.item_category.slug item=order_item.item.slug %}">{{order_item.item.name}}</a>
+													{% else %}
+														{{order_item.item.name}}
+													{% endif %}
+													(${{order_item.item.price}})
+												</p>
+											{% endif %}
+										{% endfor %}
+									</td>
+									<td>${{order.get_price_total}}</td>
+									<td>{{order.shipping_address}}</td>
+									<td>
+										{{order.date}}
+										{% if order.cancelled %}
+											<p><b>(cancelled)</b></p>
+										{% elif order.refund_granted %}
+											<p><b>(refunded)</b></p>
+										{% endif %}
+									</td>
+									<td>{{order.ref_code}}</td>
+									<td>{{ order.delivered|yesno:"✔,✘" }}</td>
+									<td>{{ order.recieved|yesno:"✔,✘" }}</td>							
+								</tr>
+							{% endif %}
+					
+						{% empty %}
+							<tr>
+								<td colspan="5">No orders in history</td>
+							</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+
+			</div>
+		</div>	
+	{% endblock body %}
+
+	{% block javascript %}
+		<script type="text/javascript" src="{% static 'user_profile/js/reusable_code/verify_password.js' %}"></script>
+	{% endblock %}
+	
+</body>

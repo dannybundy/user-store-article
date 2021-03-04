@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load user_profile_template_tags %}
+{% load static %}
+
+
+<head>
+	{% block title %}{{user.username}}'s Profile{% endblock %}
+</head>
+
+<body>
+	{% block profile %}active{% endblock %}
+	
+	{% block body %}
+		<div class="center border-l-grey border-round mw-300">
+			<h3>{{ user.username }} <small class="text-14">({{user.first_name}} {{user.last_name}})</small></h3>
+			<small class="text-14">Date joined: {{user.date_joined}}</small>
+			<img class="img-fluid mt-2 mb-2" src="{% static 'user_profile/html_images/tintin_profile.jpg' %}">
+			
+			<a href="{% url 'profile:update_profile' %}">Update Profile</a><br>
+			<a href="{% url 'profile:password_change' %}">Change Password</a><br>
+			{% if user|show_verify %}
+				<a href="{% url 'profile:phone_verification' %}">Verify Phone Number</a>
+			{% endif %}
+		</div>
+	{% endblock body %}
+
+	{% block javascript %}
+		<script type="text/javascript">
+			$(document).ready(function(){
+				$("#update_account").show();
+				$("#change_password").show();
+				$verifyBtn = $("#verify_phone_number");
+				if ($verifyBtn){
+					$verifyBtn.show();
+				}
+			});
+		</script>	
+		<script src="{% static 'user_profile/js/reusable_code/verify_password.js' %}"></script>
+	{% endblock javascript %}
+</body>

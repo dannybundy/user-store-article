@@ -1,0 +1,142 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+
+<head>
+	{% block title %}Your Shipping Addresses{% endblock %}
+</head>
+
+<body>
+	{% block profile %}active{% endblock %}
+
+	{% block body %}
+		<noscript>
+			<meta HTTP-EQUIV="REFRESH" content="0; url={% url 'store:billing_profile' %}">
+		</noscript>
+
+		<div class="center border-l-grey border-round mw-300">
+			<h3>Your Shipping Addresses</h3>
+			<img class="img-fluid" src="{% static 'store/html_images/tintin_address.jpg' %}" alt="tintin_address">
+
+			<select name="stored_address" id="id_stored_address" class="form-control">
+			{% for x, y in stored_address_list.fields.stored_address.choices %}
+			    <option value="{{ x }}"{% if form.fields.customer.value == x %}selected{% endif %}>{{ y }}</option>
+			{% endfor %}
+			</select>
+
+			<button class="btn btn-success add-btn w-full">Add</button>
+
+	    	{% for address, pk in address_form_list %}
+	    		<form method="POST" id="{{pk}}" class="single-submit update-form">
+	    			{% csrf_token %}
+
+					<button type="button" class="btn btn-sm bt-color2 back-btn mt-3 mb-3">Back</button><br>
+
+	    			<h3>Update Shipping Address</h3>
+
+					{% if address.non_field_errors %}
+					  <div class="alert alert-danger">
+					    {% for err in address.non_field_errors %}
+					      <p>{{ err }}</p>
+					    {% endfor %}
+					  </div>
+					{% endif %}
+
+					<input name="pk" value="{{pk}}" hidden>
+
+					<label for="id_line1">Line 1</label>
+					{{address.line1|as_crispy_field}}
+
+					<label for="id_line2">Line 2 (optional)</label>
+					{{address.line2|as_crispy_field}}
+					<br>
+
+					<label for="id_city">City</label>
+					{{address.city|as_crispy_field}}
+
+					<label for="id_state">State</label>
+					{{address.state|as_crispy_field}}
+
+					<label for="id_zipcode">Zip Code</label>
+					{{address.zipcode|as_crispy_field}}
+
+					<label for="id_country">Country</label>
+					{{address.country|as_crispy_field}}
+					<br>
+
+					<label for="id_first_name">First Name</label>
+					{{address.first_name|as_crispy_field}}
+
+					<label for="id_last_name">Last Name</label>
+					{{address.last_name|as_crispy_field}}
+
+					<label for="id_email">Email Address</label>
+					{{address.email|as_crispy_field}}
+						
+					<button type="submit" name="update" value="true" class="btn bt-color1 w-full mb-2">Update Address</button>
+					<button type="submit" name="delete" value="true" class="btn btn-danger w-full">Delete</button>
+
+	    		</form>
+    		{% endfor %}
+
+			<form method="POST" class="single-submit add-form">
+				{% csrf_token %}
+
+				<button type="button" class="btn btn-sm bt-color2 back-btn mt-3 mb-3">Back</button><br>
+
+				<h3>Add New Shipping Address</h3>
+
+				{% if form.non_field_errors %}
+				  <div class="alert alert-danger">
+				    {% for err in form.non_field_errors %}
+				      <p>{{ err }}</p>
+				    {% endfor %}
+				  </div>
+				{% endif %}
+
+				<label for="id_line1">Line 1</label>
+				{{form.line1|as_crispy_field}}
+
+				<label for="id_line2">Line 2 (optional)</label>
+				{{form.line2|as_crispy_field}}
+				<br>
+
+				<label for="id_city">City</label>
+				{{form.city|as_crispy_field}}
+
+				<label for="id_state">State</label>
+				{{form.state|as_crispy_field}}
+
+				<label for="id_zipcode">Zip Code</label>
+				{{form.zipcode|as_crispy_field}}
+
+				<label for="id_country">Country</label>
+				{{form.country|as_crispy_field}}
+				<br>
+
+				<label for="id_first_name">First Name</label>
+				{{form.first_name|as_crispy_field}}
+
+				<label for="id_last_name">Last Name</label>
+				{{form.last_name|as_crispy_field}}
+
+				<label for="id_email">Email Address</label>
+				{{form.email|as_crispy_field}}
+				
+				<button type="submit" name="add" value="true" class="btn bt-color1 w-full">Add Address</button>
+			</form>
+
+			<hr class="hr-light-blue">
+	        <a href="{% url 'store:billing_profile' %}"><center>Back to billing profile</center></a>
+
+		</div>
+
+	{% endblock body %}
+
+	{% block javascript %}
+		<script type="text/javascript" src="{% static 'store/js/reusable_code/functions.js' %}"></script>
+		<script type="text/javascript" src="{% static 'store/js/cards_and_shipping.js' %}"></script>
+		<script src="{% static 'user_profile/js/reusable_code/verify_password.js' %}"></script>
+	{% endblock javascript %}
+</body>
